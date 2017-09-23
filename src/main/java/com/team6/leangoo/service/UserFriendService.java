@@ -39,6 +39,7 @@ public class UserFriendService {
     }
 
     public int addFriend(UserFriend userFriend){
+        if (userFriend.getUserId() == userFriend.getFriendTo()) return 0;
         if (userFriendMapper.selectOne(userFriend) == null)
         return userFriendMapper.insert(userFriend);
         else return 0;

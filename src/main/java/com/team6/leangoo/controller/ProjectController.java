@@ -154,7 +154,7 @@ public class ProjectController {
         AjaxResult ajaxResult = new AjaxResult();
         try {
             User user = new User();
-            user.setUserAccount(map.get("userAccount").toString());
+            user.setUserAccount(map.get("leaguer").toString());
             Project project = new Project();
             project.setProjectId(Integer.valueOf(map.get("projectId").toString()));
             if (projectService.addProjectLeaguer(project,user) == 1){
