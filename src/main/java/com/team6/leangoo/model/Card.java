@@ -1,11 +1,14 @@
 package com.team6.leangoo.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.util.Date;
 import javax.persistence.*;
 
 public class Card {
     @Id
     @Column(name = "card_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer cardId;
 
     @Column(name = "card_name")
@@ -15,9 +18,11 @@ public class Card {
     private String cardIntro;
 
     @Column(name = "card_end_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date cardEndDate;
 
     @Column(name = "card_start_date")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date cardStartDate;
 
     @Column(name = "card_label")

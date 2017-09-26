@@ -1,10 +1,13 @@
 package com.team6.leangoo.controller;
 
+import com.team6.leangoo.model.Board;
 import com.team6.leangoo.model.Card;
+import com.team6.leangoo.model.ListCard;
 import com.team6.leangoo.service.CardService;
 import com.team6.leangoo.util.AjaxResult;
 import com.team6.leangoo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,10 +23,13 @@ public class CardController {
     @Autowired private CardService cardService;
 
     @RequestMapping(value = "/getCardList", method = RequestMethod.POST)
-    public AjaxResult getCardList(Integer boardId) {
+    public AjaxResult getCardList(@RequestBody Board board) {
         AjaxResult ajaxResult = new AjaxResult();
         try {
-            ajaxResult.setData(cardService.getCardList(boardId).getLists());
+            Board board1=cardService.getCardList(board.getBoardId());
+            if(board1!=null)
+            ajaxResult.setData(board1.getLists());
+            else ajaxResult.seterrcode(AjaxResult.ERRCODE_NOT_EXITS);
         } catch (Exception e) {
             e.printStackTrace();
             ajaxResult.seterrcode(AjaxResult.ERRCODE_SYSTEM_ERROR);
@@ -47,12 +53,12 @@ public class CardController {
         }
     }
     @RequestMapping(value="/newCard",method = RequestMethod.POST)
-    public AjaxResult newCard(Card card){
+    public AjaxResult newCard(Card card, ListCard listCard){
         AjaxResult ajaxResult=new AjaxResult();
         card.setCardStartDate(DateUtil.LocalDateToDate(LocalDate.now()));
         card.setCardEndDate(DateUtil.LocalDateToDate(LocalDate.now().plusDays(7)));
         try {
-            ajaxResult.setData(cardService.newCard(card));
+            ajaxResult.setData(cardService.newCard(card,listCard));
             ajaxResult.seterrcode(0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +69,7 @@ public class CardController {
         }
     }
     @RequestMapping(value = "/delCard",method = RequestMethod.POST)
-    public AjaxResult delCard(Card card){
+    public AjaxResult delCard(@RequestBody Card card){
         AjaxResult ajaxResult=new AjaxResult();
         try {
             ajaxResult.setData(cardService.delCard(card));
@@ -75,5 +81,8 @@ public class CardController {
             return ajaxResult;
         }
     }
-
+    @RequestMapping(value = "/updateCardList",method = RequestMethod.POST)
+    public AjaxResult updateCardList(@RequestBody Board board){
+       return new AjaxResult(cardService.updateCardList(board));
+    }
 }

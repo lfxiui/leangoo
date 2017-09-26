@@ -1,89 +1,95 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.team6.leangoo.mapper.ProjectMapper" >
-  <resultMap id="BaseResultMap" type="com.team6.leangoo.model.Project" >
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="project_id" property="projectId" jdbcType="INTEGER" />
-    <result column="project_name" property="projectName" jdbcType="VARCHAR" />
-    <result column="project_intro" property="projectIntro" jdbcType="VARCHAR" />
-    <result column="project_create_date" property="projectCreateDate" jdbcType="DATE" />
-    <result column="project_start_date" property="projectStartDate" jdbcType="DATE" />
-    <result column="project_end_date" property="projectEndDate" jdbcType="DATE" />
-    <result column="project_is_archive" property="projectIsArchive" jdbcType="INTEGER"/>
-  </resultMap>
-  <resultMap id="archiveProject" type="com.team6.leangoo.model.Project">
-    <id column="project_id" property="projectId" jdbcType="INTEGER"/>
-    <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
-  </resultMap>
-  <resultMap id="userProjectList" type="com.team6.leangoo.model.Project">
-    <id column="project_id" property="projectId" jdbcType="INTEGER"/>
-    <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
-    <result column="project_intro" property="projectIntro" jdbcType="VARCHAR" />
-    <result column="project_create_date" property="projectCreateDate" jdbcType="DATE" />
-    <collection property="boardList" ofType="com.team6.leangoo.model.Board">
-      <id column="board_id" property="boardId" jdbcType="INTEGER" />
-      <result column="board_name" property="boardName" jdbcType="VARCHAR" />
-      <result column="board_start_date" property="boardStartDate" jdbcType="DATE" />
-      <result column="board_end_date" property="boardEndDate" jdbcType="DATE" />
-      <result column="board_locate" property="boardLocate" jdbcType="INTEGER" />
-    </collection>
-  </resultMap>
-  <resultMap id="projectLeaguer" type="com.team6.leangoo.model.User" >
-    <result column="user_account" property="userAccount" jdbcType="VARCHAR"/>
-    <result column="user_email" property="userEmail" jdbcType="VARCHAR"/>
-    <result column="user_avatar" property="userAvatar" jdbcType="VARCHAR"/>
-  </resultMap>
-  <resultMap id="projectBoard" type="com.team6.leangoo.model.Board">
-    <id column="board_id" property="boardId" jdbcType="INTEGER"/>
-    <result column="board_name" property="boardName" jdbcType="VARCHAR"/>
-  </resultMap>
-  <select id="getArchiveProjects"  parameterType="integer" resultMap="archiveProject">
-    SELECT
-		project.project_id,
-		project.project_name
+<mapper namespace="com.team6.leangoo.mapper.ProjectMapper">
+    <resultMap id="BaseResultMap" type="com.team6.leangoo.model.Project">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="project_id" property="projectId" jdbcType="INTEGER"/>
+        <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
+        <result column="project_intro" property="projectIntro" jdbcType="VARCHAR"/>
+        <result column="project_create_date" property="projectCreateDate" jdbcType="DATE"/>
+        <result column="project_start_date" property="projectStartDate" jdbcType="DATE"/>
+        <result column="project_end_date" property="projectEndDate" jdbcType="DATE"/>
+        <result column="project_is_archive" property="projectIsArchive" jdbcType="INTEGER"/>
+    </resultMap>
+    <resultMap id="archiveProject" type="com.team6.leangoo.model.Project">
+        <id column="project_id" property="projectId" jdbcType="INTEGER"/>
+        <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="userProjectList" type="com.team6.leangoo.model.Project">
+        <id column="project_id" property="projectId" jdbcType="INTEGER"/>
+        <result column="project_name" property="projectName" jdbcType="VARCHAR"/>
+        <result column="project_intro" property="projectIntro" jdbcType="VARCHAR"/>
+        <result column="project_create_date" property="projectCreateDate" jdbcType="DATE"/>
+        <result column="project_is_archive" property="projectIsArchive" jdbcType="INTEGER"/>
+        <collection property="boardList" ofType="com.team6.leangoo.model.Board">
+            <id column="board_id" property="boardId" jdbcType="INTEGER"/>
+            <result column="board_name" property="boardName" jdbcType="VARCHAR"/>
+            <result column="board_start_date" property="boardStartDate" jdbcType="DATE"/>
+            <result column="board_end_date" property="boardEndDate" jdbcType="DATE"/>
+            <result column="board_locate" property="boardLocate" jdbcType="INTEGER"/>
+            <result column="board_is_archive" property="boardIsArchive" jdbcType="INTEGER"/>
+        </collection>
+    </resultMap>
+    <resultMap id="projectLeaguer" type="com.team6.leangoo.model.User">
+        <result column="user_account" property="userAccount" jdbcType="VARCHAR"/>
+        <result column="user_email" property="userEmail" jdbcType="VARCHAR"/>
+        <result column="user_avatar" property="userAvatar" jdbcType="VARCHAR"/>
+    </resultMap>
+    <resultMap id="projectBoard" type="com.team6.leangoo.model.Board">
+        <id column="board_id" property="boardId" jdbcType="INTEGER"/>
+        <result column="board_name" property="boardName" jdbcType="VARCHAR"/>
+    </resultMap>
+    <select id="getArchiveProjects" parameterType="integer" resultMap="archiveProject">
+        SELECT
+            project.project_id,
+            project.project_name
         FROM
-            project_user
-		INNER JOIN project ON project_user.project_id=project.project_id
-        WHERE project_is_archive = 1 AND user_id = #{userId}
-  </select>
-  <select id="getUserProjectList" parameterType="INTEGER" resultMap="userProjectList">
-    SELECT
-project.project_id,
-project.project_name,
-project.project_intro,
-project.project_create_date,
-board.board_id,
-board.board_name,
-board.board_start_date,
-board.board_end_date,
-board.board_locate
-FROM
-project
-INNER JOIN project_board ON project.project_id = project_board.project_id
-INNER JOIN board ON project_board.board_id = board.board_id
-INNER JOIN project_user ON project.project_id = project_user.project_id
-INNER JOIN `user` ON project_user.user_id = `user`.user_id
-WHERE project.project_is_archive = 0 AND board.board_is_archive = 0 AND `user`.user_id = #{userId}
-  </select>
-  <select id="getProjectLeaguerList" parameterType="INTEGER" resultMap="projectLeaguer">
-    SELECT
-    `user`.user_account,
-    `user`.user_email,
-    `user`.user_avatar
-    FROM
-    `user`
-    INNER JOIN project_user ON `user`.user_id = project_user.user_id
-    WHERE project_user.project_id = #{projectId}
-  </select>
-  <select id="getBoardListByProjectId" parameterType="INTEGER" resultMap="projectBoard">
-    SELECT
-    board.board_id,
-    board.board_name
-    FROM
-    board
-    INNER JOIN project_board ON board.board_id = project_board.board_id
-    WHERE project_board.project_id = #{projectId}
-  </select>
+            project
+        LEFT JOIN project_user ON project.project_id=project_user.project_id
+        LEFT JOIN user ON project_user.user_id=user.user_id
+        WHERE user.user_id=#{userId} AND project.project_is_archive=1
+    </select>
+    <select id="getUserProjectList" parameterType="INTEGER" resultMap="userProjectList">
+        SELECT
+            project.project_id,
+            project.project_name,
+            project.project_intro,
+            project.project_create_date,
+            project.project_is_archive,
+            board.board_is_archive,
+            board.board_id,
+            board.board_name,
+            board.board_start_date,
+            board.board_end_date,
+            board.board_locate
+        FROM
+            project
+            LEFT JOIN project_user ON project.project_id = project_user.project_id
+            LEFT JOIN user ON project_user.user_id = user.user_id
+            LEFT JOIN project_board ON project.project_id = project_board.project_id
+            LEFT JOIN board ON project_board.board_id = board.board_id
+        WHERE project_user.is_personal = 0 AND project_is_archive = 0  AND
+              user.user_id = #{userId}
+    </select>
+    <select id="getProjectLeaguerList" parameterType="INTEGER" resultMap="projectLeaguer">
+        SELECT
+            `user`.user_account,
+            `user`.user_email,
+            `user`.user_avatar
+        FROM
+            `user`
+            INNER JOIN project_user ON `user`.user_id = project_user.user_id
+        WHERE project_user.project_id = #{projectId}
+    </select>
+    <select id="getBoardListByProjectId" parameterType="INTEGER" resultMap="projectBoard">
+        SELECT
+            board.board_id,
+            board.board_name
+        FROM
+            board
+            INNER JOIN project_board ON board.board_id = project_board.board_id
+        WHERE project_board.project_id = #{projectId}
+    </select>
 </mapper>

@@ -14,12 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class LoginService {
     @Autowired private UserMapper userMapper;
 
-    public void getUserInfo(String UserAccount){
+    public User getUserInfo(String UserAccount){
         User user=new User();
-        user.setUserAccount("agzou");
-        userMapper.deleteByPrimaryKey(2);
-        userMapper.insert(user);
-        userMapper.delete(user);
+        user.setUserAccount(UserAccount);
+        return userMapper.selectOne(user);
 
     }
 }
