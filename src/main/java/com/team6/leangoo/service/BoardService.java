@@ -1,6 +1,7 @@
 package com.team6.leangoo.service;
 
 import com.team6.leangoo.mapper.BoardMapper;
+import com.team6.leangoo.mapper.CardMapper;
 import com.team6.leangoo.mapper.ProjectBoardMapper;
 import com.team6.leangoo.mapper.ProjectMapper;
 import com.team6.leangoo.model.Board;
@@ -31,6 +32,8 @@ public class BoardService {
     private ProjectBoardMapper projectBoardMapper;
     @Autowired
     private ProjectMapper projectMapper;
+    @Autowired
+    private CardMapper cardMapper;
 
     public List getArchiveBoardList(User user) {
         List<Board> boards = boardMapper.getArchiveBoards(user.getUserId());
@@ -53,4 +56,8 @@ public class BoardService {
             return board.getBoardId();
         } else return -1;
     }
+    public Board getBoardById(Board board){
+        return boardMapper.selectByPrimaryKey(board);
+    }
+
 }

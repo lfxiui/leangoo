@@ -23,7 +23,7 @@ public class LoginController {
     @RequestMapping(value = "/getUserInfo", method = RequestMethod.POST)
     public AjaxResult getUserInfo(String UserAccount) {
         AjaxResult ajaxResult = new AjaxResult();
-       // ajaxResult.setData(loginService.getUserInfo(UserAccount));
+       ajaxResult.setData(loginService.getUserInfo("agzou"));
         return ajaxResult;
     }
 

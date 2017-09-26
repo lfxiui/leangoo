@@ -7,10 +7,7 @@ import com.team6.leangoo.service.BoardService;
 import com.team6.leangoo.service.UserService;
 import com.team6.leangoo.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -57,7 +54,10 @@ public class BoardController {
         Integer userId=1;
         AjaxResult ajaxResult=new AjaxResult();
         try {
-            ajaxResult.setData(userService.selectUserPersonalBoardList(userId).getPersonalBoardList());
+            User user=userService.selectUserPersonalBoardList(userId);
+            if(user!=null)
+            ajaxResult.setData(user.getPersonalBoardList());
+            else ajaxResult.seterrcode(AjaxResult.ERRCODE_NOT_EXITS);
         } catch (Exception e) {
             e.printStackTrace();
             ajaxResult.seterrcode(10);
@@ -66,7 +66,7 @@ public class BoardController {
             return ajaxResult;
         }
     }
-    @RequestMapping(value = "/newBoard",method = RequestMethod.POST)
+    @RequestMapping(value = "/newBoard",method = RequestMethod.POST,produces = "*/*")
     public AjaxResult newBoard(Board board,ProjectBoard projectBoard){
         AjaxResult ajaxResult=new AjaxResult();
         try {
@@ -81,5 +81,9 @@ public class BoardController {
         }
 
 
+    }
+    @RequestMapping(value = "/getBoardById",method = RequestMethod.POST)
+    public AjaxResult getBoardById(@RequestBody Board board){
+       return new AjaxResult(boardService.getBoardById(board));
     }
 }
