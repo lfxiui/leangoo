@@ -1,8 +1,8 @@
 package com.team6.leangoo.controller;
 
-import com.team6.leangoo.model.Board;
 import com.team6.leangoo.model.Project;
 import com.team6.leangoo.model.User;
+import com.team6.leangoo.service.ProjectService;
 import com.team6.leangoo.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
