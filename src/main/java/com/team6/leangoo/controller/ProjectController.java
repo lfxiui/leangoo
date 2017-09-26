@@ -2,7 +2,6 @@ package com.team6.leangoo.controller;
 
 import com.team6.leangoo.model.Project;
 import com.team6.leangoo.model.User;
-import com.team6.leangoo.service.ProjectService;
 import com.team6.leangoo.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
