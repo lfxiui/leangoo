@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * Created by AgZou on 2017/9/14.
@@ -53,12 +54,14 @@ public class CardController {
         }
     }
     @RequestMapping(value="/newCard",method = RequestMethod.POST)
-    public AjaxResult newCard(Card card, ListCard listCard){
+    public AjaxResult newCard(Card card){
         AjaxResult ajaxResult=new AjaxResult();
         card.setCardStartDate(DateUtil.LocalDateToDate(LocalDate.now()));
         card.setCardEndDate(DateUtil.LocalDateToDate(LocalDate.now().plusDays(7)));
         try {
-            ajaxResult.setData(cardService.newCard(card,listCard));
+
+
+            ajaxResult.setData(cardService.newCard(card));
             ajaxResult.seterrcode(0);
         } catch (Exception e) {
             e.printStackTrace();
@@ -82,7 +85,7 @@ public class CardController {
         }
     }
     @RequestMapping(value = "/updateCardList",method = RequestMethod.POST)
-    public AjaxResult updateCardList(@RequestBody Board board){
-       return new AjaxResult(cardService.updateCardList(board));
+    public AjaxResult updateCardList(@RequestBody List<com.team6.leangoo.model.List> lists){
+       return new AjaxResult(cardService.updateCardList(lists));
     }
 }

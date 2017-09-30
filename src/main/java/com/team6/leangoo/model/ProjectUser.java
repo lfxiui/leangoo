@@ -14,6 +14,17 @@ public class ProjectUser {
     @Column(name = "project_id")
     private Integer projectId;
 
+    @Column(name="is_personal")
+    private Integer isPersonal;
+
+    public Integer getIsPersonal() {
+        return isPersonal;
+    }
+
+    public void setIsPersonal(Integer isPersonal) {
+        this.isPersonal = isPersonal;
+    }
+
     /**
      * @return id
      */

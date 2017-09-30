@@ -4,12 +4,14 @@ import com.team6.leangoo.model.Project;
 import com.team6.leangoo.model.User;
 import com.team6.leangoo.service.ProjectService;
 import com.team6.leangoo.util.AjaxResult;
+import com.team6.leangoo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -86,29 +88,11 @@ public class ProjectController {
 
     @RequestMapping(value = "/newProject", method = RequestMethod.POST)
     public AjaxResult newProject(@RequestBody Project project) {
+        project.setProjectIsArchive(0);
+        project.setProjectCreateDate(DateUtil.LocalDateToDate(LocalDate.now()));
+        project.setProjectEndDate(DateUtil.LocalDateToDate(LocalDate.now().plusDays(7)));
         Integer userId = 1;
-        User user = new User();
-        user.setUserId(userId);
-        AjaxResult ajaxResult = new AjaxResult();
-        try {
-            project.setProjectCreateDate(new Date());
-            Integer projectId = projectService.newProject(user, project);
-            if (projectId > 0) {
-                ajaxResult.seterrcode(0);
-                Map map = new HashMap();
-                map.put("projectId", projectId);
-                ajaxResult.setData(map);
-            } else {
-                ajaxResult.seterrcode(10);
-                ajaxResult.setinfo("新增失败");
-            }
-            return ajaxResult;
-        } catch (Exception e) {
-            e.printStackTrace();
-            ajaxResult.seterrcode(10);
-            ajaxResult.setinfo("请求失败");
-            return ajaxResult;
-        }
+        return new AjaxResult(projectService.newProject(userId,project));
     }
 
     @RequestMapping(value = "/getProjectInfo", method = RequestMethod.POST)
@@ -228,4 +212,10 @@ public class ProjectController {
             return ajaxResult;
         }
     }
+    @RequestMapping(value = "/getUserPersonalProjectId",method = RequestMethod.POST)
+    public AjaxResult getUserPersonalProjectId(){
+        Integer userId=1;
+        return new AjaxResult(projectService.getUserPersonalProjectId(userId));
+    }
+
 }

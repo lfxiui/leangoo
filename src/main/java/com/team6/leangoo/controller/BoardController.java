@@ -6,9 +6,11 @@ import com.team6.leangoo.model.User;
 import com.team6.leangoo.service.BoardService;
 import com.team6.leangoo.service.UserService;
 import com.team6.leangoo.util.AjaxResult;
+import com.team6.leangoo.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -68,22 +70,19 @@ public class BoardController {
     }
     @RequestMapping(value = "/newBoard",method = RequestMethod.POST,produces = "*/*")
     public AjaxResult newBoard(Board board,ProjectBoard projectBoard){
-        AjaxResult ajaxResult=new AjaxResult();
-        try {
-            if(boardService.newBoard(board,projectBoard)==-1)
-                ajaxResult.seterrcode(4);
-        } catch (Exception e) {
-            e.printStackTrace();
-            ajaxResult.seterrcode(10);
-            ajaxResult.setinfo("请求失败");
-        }finally {
-            return ajaxResult;
-        }
+        board.setBoardIsArchive(0);
+        board.setBoardStartDate(DateUtil.LocalDateToDate(LocalDate.now()));
+        board.setBoardEndDate(DateUtil.LocalDateToDate(LocalDate.now().plusDays(7)));
+        return new AjaxResult(boardService.newBoard(board,projectBoard));
 
 
     }
     @RequestMapping(value = "/getBoardById",method = RequestMethod.POST)
     public AjaxResult getBoardById(@RequestBody Board board){
        return new AjaxResult(boardService.getBoardById(board));
+    }
+    @RequestMapping(value = "/updateBoard",method = RequestMethod.POST)
+    public AjaxResult updateBoard(@RequestBody Board board){
+        return new AjaxResult(boardService.updateBoard(board));
     }
 }

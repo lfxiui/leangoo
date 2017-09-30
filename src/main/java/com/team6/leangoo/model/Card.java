@@ -34,6 +34,17 @@ public class Card {
     @Column(name = "card_locate")
     private Integer cardLocate;
 
+    @Column(name = "card_list_id")
+    private Integer cardListId;
+
+    public Integer getCardListId() {
+        return cardListId;
+    }
+
+    public void setCardListId(Integer cardListId) {
+        this.cardListId = cardListId;
+    }
+
     public Integer getCardLocate() {
         return cardLocate;
     }

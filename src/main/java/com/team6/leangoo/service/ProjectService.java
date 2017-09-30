@@ -55,21 +55,10 @@ public class ProjectService {
         for(Project temp:projects){
             if(temp.getBoardList()!=null&&temp.getBoardList().size()>0){
             temp.setBoardList(temp.getBoardList().stream()
-                        .filter(board ->board.getBoardIsArchive() !=1).collect(Collectors.toList()));
+                        .filter(board ->board.getBoardIsArchive()!=null&&board.getBoardIsArchive() !=1).collect(Collectors.toList()));
             }
         }
         return projects;
-    }
-
-    public int newProject(User user, Project project) {
-        if (projectMapper.insert(project) > 0) {
-            Integer projectId = project.getProjectId();
-            ProjectUser projectUser = new ProjectUser();
-            projectUser.setUserId(user.getUserId());
-            projectUser.setProjectId(projectId);
-            if (projectUserMapper.insert(projectUser) > 0) return projectId;
-        }
-        return 0;
     }
 
     public Project getProjectInfo(Project project) {
@@ -82,7 +71,7 @@ public class ProjectService {
         Map map = null;
         for (User temp : leaguers) {
             map = new HashMap();
-            map.put("userName", temp.getUserAccount());
+            map.put("userAccount", temp.getUserAccount());
             map.put("userEmail", temp.getUserEmail());
             map.put("userAvatar", temp.getUserAvatar());
             leaguserList.add(map);
@@ -127,4 +116,20 @@ public class ProjectService {
         }
         return boardList;
     }
+    public Integer getUserPersonalProjectId(Integer userId){
+        ProjectUser projectUser=new ProjectUser();
+        projectUser.setUserId(userId);
+        projectUser.setIsPersonal(1);
+        return projectUserMapper.select(projectUser).get(0).getProjectId();
+    }
+    public Integer newProject(Integer userId,Project project){
+        projectMapper.insert(project);
+        ProjectUser projectUser=new ProjectUser();
+        projectUser.setUserId(userId);
+        projectUser.setProjectId(project.getProjectId());
+        projectUser.setIsPersonal(0);
+        projectUserMapper.insert(projectUser);
+        return project.getProjectId();
+    }
+
 }

@@ -13,5 +13,6 @@
     <result column="card_label" property="cardLabel" jdbcType="VARCHAR" />
     <result column="card_workload" property="cardWorkload" jdbcType="DOUBLE" />
     <result column="card_locate" property="cardLocate" jdbcType="INTEGER"/>
+    <result column="card_list_id" property="cardListId" jdbcType="INTEGER"/>
   </resultMap>
 </mapper>

@@ -44,12 +44,12 @@
             board.board_id,
             board.board_name
         FROM
-           board
-        LEFT JOIN project_board ON board.board_id=project_board.board_id
-        LEFT JOIN project ON project_board.project_id=project.project_id
-        LEFT JOIN project_user ON project.project_id=project_user.project_id
-        LEFT JOIN user ON project_user.user_id=user.user_id
-        WHERE user.user_id=#{userId} AND board_is_archive=1
+            board
+            LEFT JOIN project_board ON board.board_id = project_board.board_id
+            LEFT JOIN project ON project_board.project_id = project.project_id
+            LEFT JOIN project_user ON project.project_id = project_user.project_id
+            LEFT JOIN user ON project_user.user_id = user.user_id
+        WHERE user.user_id = #{userId} AND board_is_archive = 1
     </select>
 
     <select id="getList" resultMap="getListResultMap">
@@ -67,11 +67,10 @@
             card.card_label,
             card.card_workload,
             card.card_locate
-        FROM card
-        LEFT JOIN list_card ON card.card_id=list_card.card_id
-        LEFT JOIN list ON list_card.list_id=list.list_id
-        LEFT JOIN board_list ON list_card.list_id=board_list.list_id
-        LEFT JOIN board ON board.board_id=board_list.board_id
-        WHERE board.board_id=#{boardId} ORDER BY list_locate,card_locate
+        FROM list
+            LEFT JOIN card ON list.list_id = card.card_list_id
+            LEFT JOIN board_list ON list.list_id = board_list.list_id
+            LEFT JOIN board ON board_list.board_id = board.board_id
+        WHERE board.board_id = #{boardId} ORDER BY list_locate,card_locate
     </select>
 </mapper>

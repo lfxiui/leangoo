@@ -19,13 +19,11 @@ public class Board {
     private String boardName;
 
     @Column(name = "board_start_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date boardStartDate;
 
     @Column(name = "board_end_date")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     private Date boardEndDate;
 
     @Column(name = "board_start")

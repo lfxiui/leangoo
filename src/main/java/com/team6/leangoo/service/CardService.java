@@ -25,8 +25,6 @@ public class CardService {
     @Autowired
     private CardMapper cardMapper;
     @Autowired
-    private ListCardMapper listCardMapper;
-    @Autowired
     private ListMapper listMapper;
 
     public Board getCardList(Integer boardId) {
@@ -37,25 +35,26 @@ public class CardService {
         return cardMapper.updateByPrimaryKeySelective(card);
     }
 
-    public Card newCard(Card card,ListCard listCard) {
-        cardMapper.insert(card);
-        listCard.setCardId(card.getCardId());
-        if(CheckId.canInsert(listMapper,listCard.getListId()))
-        listCardMapper.insert(listCard);
-        else return null;
-        return card;
+    public Card newCard(Card card) {
+        if (CheckId.canInsert(listMapper, card.getCardListId())) {
+            cardMapper.insert(card);
+            return card;
+        } else return null;
+
     }
-    public Integer delCard(Card card){
-        if(card.getCardId()!=null) {
-            Example example = new Example(ListCard.class);
-            example.createCriteria().andEqualTo("cardId", card.getCardId());
-            listCardMapper.deleteByExample(example);
-            return cardMapper.deleteByPrimaryKey(card);
-        }return -1;
+
+    public Integer delCard(Card card) {
+        return cardMapper.deleteByPrimaryKey(card);
     }
-    public Integer updateCardList(Board board){
-        for(com.team6.leangoo.model.List temp:board.getLists()){
-            cardMapper.insertList(temp.getCardList());
-        }return 1;
+
+    public Integer updateCardList(java.util.List<List> lists) {
+
+        for (List list : lists) {
+            listMapper.updateByPrimaryKey(list);
+            list.getCardList().forEach(card ->
+                    cardMapper.updateByPrimaryKeySelective(card)
+            );
+        }
+        return 1;
     }
 }

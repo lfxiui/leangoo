@@ -1,10 +1,8 @@
 package com.team6.leangoo.service;
 
-import com.team6.leangoo.mapper.BoardMapper;
-import com.team6.leangoo.mapper.CardMapper;
-import com.team6.leangoo.mapper.ProjectBoardMapper;
-import com.team6.leangoo.mapper.ProjectMapper;
+import com.team6.leangoo.mapper.*;
 import com.team6.leangoo.model.Board;
+import com.team6.leangoo.model.BoardList;
 import com.team6.leangoo.model.ProjectBoard;
 import com.team6.leangoo.model.User;
 import com.team6.leangoo.util.CheckId;
@@ -34,6 +32,9 @@ public class BoardService {
     private ProjectMapper projectMapper;
     @Autowired
     private CardMapper cardMapper;
+    @Autowired
+    private ListMapper listMapper;
+    @Autowired private BoardListMapper boardListMapper;
 
     public List getArchiveBoardList(User user) {
         List<Board> boards = boardMapper.getArchiveBoards(user.getUserId());
@@ -48,16 +49,49 @@ public class BoardService {
     }
 
     public Integer newBoard(Board board, ProjectBoard projectBoard) {
-        boardMapper.insertUseGeneratedKeys(board);
-        Integer projectId = projectBoard.getProjectId();
-        if (CheckId.canInsert(projectMapper, projectId)) {
-            projectBoard.setBoardId(board.getBoardId());
-            projectBoardMapper.insert(projectBoard);
-            return board.getBoardId();
-        } else return -1;
+        boardMapper.insert(board);
+        int boardId =board.getBoardId();
+        com.team6.leangoo.model.List list1=new com.team6.leangoo.model.List();
+        com.team6.leangoo.model.List list2=new com.team6.leangoo.model.List();
+        com.team6.leangoo.model.List list3=new com.team6.leangoo.model.List();
+        com.team6.leangoo.model.List list4=new com.team6.leangoo.model.List();
+        list1.setListName("目标");
+        list2.setListName("待办事项");
+        list3.setListName("进行中");
+        list4.setListName("已完成");
+        list1.setListLocate(0);
+        list2.setListLocate(1);
+        list3.setListLocate(2);
+        list4.setListLocate(3);
+        listMapper.insertSelective(list1);
+        listMapper.insertSelective(list2);
+        listMapper.insertSelective(list3);
+        listMapper.insertSelective(list4);
+        BoardList boardList1=new BoardList();
+        BoardList boardList2=new BoardList();
+        BoardList boardList3=new BoardList();
+        BoardList boardList4=new BoardList();
+        boardList1.setBoardId(boardId);
+        boardList1.setListId(list1.getListId());
+        boardList2.setBoardId(boardId);
+        boardList2.setListId(list2.getListId());
+        boardList3.setBoardId(boardId);
+        boardList3.setListId(list3.getListId());
+        boardList4.setBoardId(boardId);
+        boardList4.setListId(list4.getListId());
+        boardListMapper.insert(boardList1);
+        boardListMapper.insert(boardList2);
+        boardListMapper.insert(boardList3);
+        boardListMapper.insert(boardList4);
+        projectBoard.setBoardId(boardId);
+        projectBoardMapper.insert(projectBoard);
+        return boardId;
     }
     public Board getBoardById(Board board){
         return boardMapper.selectByPrimaryKey(board);
+    }
+    public Integer updateBoard(Board board){
+        return boardMapper.updateByPrimaryKeySelective(board);
     }
 
 }
