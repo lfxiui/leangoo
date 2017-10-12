@@ -2,7 +2,8 @@ package com.team6.leangoo.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.util.*;
+import java.util.List;
 import javax.persistence.*;
 
 public class Card {
@@ -36,6 +37,17 @@ public class Card {
 
     @Column(name = "card_list_id")
     private Integer cardListId;
+
+    @Transient
+    private java.util.List<User> userList=new ArrayList<>();
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
+    }
 
     public Integer getCardListId() {
         return cardListId;

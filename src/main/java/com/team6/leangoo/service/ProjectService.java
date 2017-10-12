@@ -72,6 +72,7 @@ public class ProjectService {
         Map map = null;
         for (User temp : leaguers) {
             map = new HashMap();
+            map.put("userId",temp.getUserId());
             map.put("userAccount", temp.getUserAccount());
             map.put("userEmail", temp.getUserEmail());
             map.put("userAvatar", temp.getUserAvatar());
