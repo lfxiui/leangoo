@@ -2,7 +2,7 @@ package com.team6.leangoo.controller;
 
 import com.team6.leangoo.model.Board;
 import com.team6.leangoo.model.Card;
-import com.team6.leangoo.model.ListCard;
+import com.team6.leangoo.model.CardUser;
 import com.team6.leangoo.service.CardService;
 import com.team6.leangoo.util.AjaxResult;
 import com.team6.leangoo.util.DateUtil;
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class CardController {
         }
     }
     @RequestMapping(value = "/changeCard",method = RequestMethod.POST)
-    public AjaxResult changeCard(Card card){
+    public AjaxResult changeCard(@RequestBody Card card){
             AjaxResult ajaxResult=new AjaxResult();
         try {
             ajaxResult.setData(cardService.changeCard(card));
@@ -88,4 +87,13 @@ public class CardController {
     public AjaxResult updateCardList(@RequestBody List<com.team6.leangoo.model.List> lists){
        return new AjaxResult(cardService.updateCardList(lists));
     }
+    @RequestMapping(value = "/addCardUser",method = RequestMethod.POST)
+    public AjaxResult addCardUser(@RequestBody CardUser cardUser){
+        return new AjaxResult(cardService.addCardUser(cardUser));
+    }
+    @RequestMapping(value = "/removeCardUser",method = RequestMethod.POST)
+    public AjaxResult removeCardUser(@RequestBody CardUser cardUser){
+        return new AjaxResult((cardService.removeCardUser(cardUser)));
+    }
+
 }

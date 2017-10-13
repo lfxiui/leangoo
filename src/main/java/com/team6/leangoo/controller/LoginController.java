@@ -4,6 +4,7 @@ import com.team6.leangoo.model.User;
 import com.team6.leangoo.service.LoginService;
 import com.team6.leangoo.service.UserService;
 import com.team6.leangoo.util.AjaxResult;
+import com.team6.leangoo.util.AvatarUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,6 +41,7 @@ public class LoginController {
         AjaxResult ajaxResult = new AjaxResult();
         if (dbUser == null) {
             user.setUserPassword(pwd);
+            user.setUserAvatar(AvatarUtil.getAvatar());
             ajaxResult.setData(userService.insertUser(user));
             session.setAttribute("userId", user.getUserId());
             return ajaxResult;

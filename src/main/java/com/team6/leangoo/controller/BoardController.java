@@ -1,9 +1,12 @@
 package com.team6.leangoo.controller;
 
 import com.team6.leangoo.model.Board;
+import com.team6.leangoo.model.Project;
 import com.team6.leangoo.model.ProjectBoard;
 import com.team6.leangoo.model.User;
 import com.team6.leangoo.service.BoardService;
+import com.team6.leangoo.service.CardService;
+import com.team6.leangoo.service.ProjectService;
 import com.team6.leangoo.service.UserService;
 import com.team6.leangoo.util.AjaxResult;
 import com.team6.leangoo.util.DateUtil;
@@ -12,8 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,6 +36,7 @@ public class BoardController {
     public BoardController(BoardService boardService, UserService userService) {
         this.boardService = boardService;
         this.userService = userService;
+
     }
 
     @RequestMapping(value = "/getArchiveBoardList",method = RequestMethod.POST)
@@ -98,4 +102,5 @@ public class BoardController {
     public AjaxResult updateBoard(@RequestBody Board board){
         return new AjaxResult(boardService.updateBoard(board));
     }
+
 }

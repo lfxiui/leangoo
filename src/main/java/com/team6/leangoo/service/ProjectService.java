@@ -117,7 +117,7 @@ public class ProjectService {
             map.put("boardName", temp.getBoardName());
             boardList.add(map);
         }
-        return boardList;
+        return boards;
     }
 
     public Integer getUserPersonalProjectId(Integer userId) {
