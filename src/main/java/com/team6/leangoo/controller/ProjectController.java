@@ -230,4 +230,8 @@ public class ProjectController {
     public AjaxResult reArchiveProject(@RequestBody Project project){
         return new AjaxResult(projectService.reArchiveProject(project));
     }
+    @RequestMapping(value = "/getProjectChart",method = RequestMethod.POST)
+    public AjaxResult getProjectChart(@RequestBody Project project){
+        return new AjaxResult(projectService.getProjectChart(project));
+    }
 }

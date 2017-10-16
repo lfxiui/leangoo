@@ -33,6 +33,8 @@ public class ProjectService {
     private ProjectBoardMapper projectBoardMapper;
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private CardService cardService;
 
     public List getArchiveProjectList(User user) {
         List<Project> projects = projectMapper.getArchiveProjects(user.getUserId());
@@ -155,5 +157,29 @@ public class ProjectService {
     public Integer reArchiveProject(Project project){
         project.setProjectIsArchive(0);
         return projectMapper.updateByPrimaryKeySelective(project);
+    }
+    public List<Map> getProjectChart(Project project){
+        List<Board> boardList=this.getBoardListByProjectId(project);
+        List<Map> list=new ArrayList<>();
+        boardList.forEach(board -> {
+            Map map=new HashMap();
+            map.put("board",board);
+            map.put("workload",countWorkLoad(cardService.getCardList(board.getBoardId())));
+            list.add(map);
+        });
+        return list;
+    }
+    /*
+    计算看板内所有卡片工作量
+     */
+    private double countWorkLoad(Board board){
+        double count=0;
+        for(com.team6.leangoo.model.List temp : board.getLists()){
+            for(Card card:temp.getCardList()){
+                if(card.getCardWorkload()!=null)
+                    count=count+card.getCardWorkload();
+            }
+        }
+        return count;
     }
 }

@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by AgZou on 2017/8/25.
  * 测试shiro框架用 不含业务逻辑
  */
-@Controller
+//@Controller
 public class HomeController {
 
     @RequestMapping("/")

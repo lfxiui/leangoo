@@ -98,13 +98,14 @@ public class UserController {
     @RequestMapping(value = "/changeAvatar",method = RequestMethod.POST)
     public AjaxResult changeAvatar(@RequestParam("userAvatar") MultipartFile userAvatar, HttpServletRequest request,HttpSession session){
         Integer userId = (Integer) session.getAttribute("userId");
+        String sp=File.separator;
         AjaxResult ajaxResult = new AjaxResult();
         try {
             String fileName = userAvatar.getOriginalFilename();
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
             String newFileName = userId + "avatar"+suffixName;
-            ServletContext sc = request.getSession().getServletContext();
-            String path = request.getSession().getServletContext().getRealPath("avatar/");
+            String path = request.getSession().getServletContext().getRealPath("/img/");
+            //path=path+sp+"WEB-INF"+sp+"classes"+sp+"static"+sp+"img"+sp;
             File f = new File(path);
             if (!f.exists())
                 f.mkdirs();
@@ -126,7 +127,7 @@ public class UserController {
 
             User user = new User();
             user.setUserId(userId);
-            user.setUserAvatar(path+newFileName);//要不要 path+ ?
+            user.setUserAvatar("/img/"+newFileName);//要不要 path+ ?
             if (userService.changeUserInfo(user)==1) {
                 ajaxResult.seterrcode(0);
             } else {
@@ -134,7 +135,7 @@ public class UserController {
                 ajaxResult.setinfo("操作失败");
             }
             Map map = new HashMap();
-            map.put("userAvatar",path+newFileName);
+            map.put("userAvatar","/img/"+newFileName);
             ajaxResult.setData(map);
             return ajaxResult;
         } catch (Exception e) {

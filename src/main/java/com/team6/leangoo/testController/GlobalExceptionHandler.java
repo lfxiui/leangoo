@@ -13,7 +13,7 @@ import org.springframework.web.servlet.ModelAndView;
  * 统一异常处理,解决shiro因为没有权限抛出UnauthorizedException的问题
  * 可以在里面跳转url,实现返回错误前页面
  */
-@ControllerAdvice
+//@ControllerAdvice
 public class GlobalExceptionHandler {
     public static final String DEFAULT_ERROR_VIEW = "error";
     @ExceptionHandler({UnauthorizedException.class})
