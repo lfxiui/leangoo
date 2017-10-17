@@ -104,8 +104,8 @@ public class UserController {
             String fileName = userAvatar.getOriginalFilename();
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
             String newFileName = userId + "avatar"+suffixName;
-            String path = request.getSession().getServletContext().getRealPath("/img/");
-            //path=path+sp+"WEB-INF"+sp+"classes"+sp+"static"+sp+"img"+sp;
+            String path = request.getSession().getServletContext().getRealPath("/");
+            path=path+"WEB-INF"+sp+"classes"+sp+"static"+sp+"img"+sp;
             File f = new File(path);
             if (!f.exists())
                 f.mkdirs();
@@ -127,7 +127,7 @@ public class UserController {
 
             User user = new User();
             user.setUserId(userId);
-            user.setUserAvatar("/img/"+newFileName);//要不要 path+ ?
+            user.setUserAvatar("./img/"+newFileName);//要不要 path+ ?
             if (userService.changeUserInfo(user)==1) {
                 ajaxResult.seterrcode(0);
             } else {
@@ -135,7 +135,7 @@ public class UserController {
                 ajaxResult.setinfo("操作失败");
             }
             Map map = new HashMap();
-            map.put("userAvatar","/img/"+newFileName);
+            map.put("userAvatar","./img/"+newFileName);
             ajaxResult.setData(map);
             return ajaxResult;
         } catch (Exception e) {
