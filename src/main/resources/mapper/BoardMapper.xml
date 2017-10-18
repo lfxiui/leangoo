@@ -35,6 +35,11 @@
                 <result column="card_label" property="cardLabel" jdbcType="VARCHAR"/>
                 <result column="card_workload" property="cardWorkload" jdbcType="DOUBLE"/>
                 <result column="card_locate" property="cardLocate" jdbcType="INTEGER"/>
+                <collection property="userList" ofType="com.team6.leangoo.model.User">
+                    <id column="user_id" property="userId" jdbcType="INTEGER"/>
+                    <result column="user_account" property="userAccount" jdbcType="VARCHAR"/>
+                    <result column="user_avatar" property="userAvatar" jdbcType="VARCHAR"/>
+                </collection>
             </collection>
         </collection>
     </resultMap>
@@ -66,11 +71,16 @@
             card.card_start_date,
             card.card_label,
             card.card_workload,
-            card.card_locate
+            card.card_locate,
+            user.user_id,
+            user.user_account,
+            user.user_avatar
         FROM list
             LEFT JOIN card ON list.list_id = card.card_list_id
             LEFT JOIN board_list ON list.list_id = board_list.list_id
             LEFT JOIN board ON board_list.board_id = board.board_id
+            LEFT JOIN card_user ON card.card_id=card_user.card_id
+            LEFT JOIN user ON card_user.user_id=user.user_id
         WHERE board.board_id = #{boardId} ORDER BY list_locate,card_locate
     </select>
 </mapper>

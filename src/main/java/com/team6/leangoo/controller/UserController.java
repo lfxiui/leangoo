@@ -10,6 +10,7 @@ import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
@@ -28,16 +29,16 @@ public class UserController {
 
 
     @RequestMapping(value = "/getUserInfoById",method = RequestMethod.POST)
-    public AjaxResult getUserInfoById(){
-        Integer userId =1;
+    public AjaxResult getUserInfoById(HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
         User user=new User();
         user.setUserId(userId);
         return new AjaxResult(userService.getUserInfoById(user));
     }
 
     @RequestMapping(value = "/changeUserInfo",method = RequestMethod.POST)
-    public AjaxResult changeUserInfo(@RequestBody User userMsg){
-        Integer userId = 1;
+    public AjaxResult changeUserInfo(@RequestBody User userMsg,HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
         AjaxResult ajaxResult = new AjaxResult();
         try {
             userMsg.setUserId(userId);
@@ -61,8 +62,8 @@ public class UserController {
     }
 
     @RequestMapping(value = "/changeUserPassword",method = RequestMethod.POST)
-    public AjaxResult changeUserPassword(@RequestBody Map map){
-        Integer userId = 1;
+    public AjaxResult changeUserPassword(@RequestBody Map map,HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
         AjaxResult ajaxResult = new AjaxResult();
         try {
             User user = new User();
@@ -95,15 +96,16 @@ public class UserController {
     }
 
     @RequestMapping(value = "/changeAvatar",method = RequestMethod.POST)
-    public AjaxResult changeAvatar(@RequestParam("userAvatar") MultipartFile userAvatar, HttpServletRequest request){
-        Integer userId = 1;
+    public AjaxResult changeAvatar(@RequestParam("userAvatar") MultipartFile userAvatar, HttpServletRequest request,HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
+        String sp=File.separator;
         AjaxResult ajaxResult = new AjaxResult();
         try {
             String fileName = userAvatar.getOriginalFilename();
             String suffixName = fileName.substring(fileName.lastIndexOf("."));
             String newFileName = userId + "avatar"+suffixName;
-            ServletContext sc = request.getSession().getServletContext();
-            String path = request.getSession().getServletContext().getRealPath("avatar/");
+            String path = request.getSession().getServletContext().getRealPath("/");
+            path=path+"WEB-INF"+sp+"classes"+sp+"static"+sp+"img"+sp;
             File f = new File(path);
             if (!f.exists())
                 f.mkdirs();
@@ -125,7 +127,7 @@ public class UserController {
 
             User user = new User();
             user.setUserId(userId);
-            user.setUserAvatar(path+newFileName);//要不要 path+ ?
+            user.setUserAvatar("./img/"+newFileName);//要不要 path+ ?
             if (userService.changeUserInfo(user)==1) {
                 ajaxResult.seterrcode(0);
             } else {
@@ -133,7 +135,7 @@ public class UserController {
                 ajaxResult.setinfo("操作失败");
             }
             Map map = new HashMap();
-            map.put("userAvatar",path+newFileName);
+            map.put("userAvatar","./img/"+newFileName);
             ajaxResult.setData(map);
             return ajaxResult;
         } catch (Exception e) {

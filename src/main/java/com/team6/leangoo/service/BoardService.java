@@ -34,7 +34,10 @@ public class BoardService {
     private CardMapper cardMapper;
     @Autowired
     private ListMapper listMapper;
-    @Autowired private BoardListMapper boardListMapper;
+    @Autowired
+    private BoardListMapper boardListMapper;
+    @Autowired
+    private ListService listService;
 
     public List getArchiveBoardList(User user) {
         List<Board> boards = boardMapper.getArchiveBoards(user.getUserId());
@@ -50,11 +53,11 @@ public class BoardService {
 
     public Integer newBoard(Board board, ProjectBoard projectBoard) {
         boardMapper.insert(board);
-        int boardId =board.getBoardId();
-        com.team6.leangoo.model.List list1=new com.team6.leangoo.model.List();
-        com.team6.leangoo.model.List list2=new com.team6.leangoo.model.List();
-        com.team6.leangoo.model.List list3=new com.team6.leangoo.model.List();
-        com.team6.leangoo.model.List list4=new com.team6.leangoo.model.List();
+        int boardId = board.getBoardId();
+        com.team6.leangoo.model.List list1 = new com.team6.leangoo.model.List();
+        com.team6.leangoo.model.List list2 = new com.team6.leangoo.model.List();
+        com.team6.leangoo.model.List list3 = new com.team6.leangoo.model.List();
+        com.team6.leangoo.model.List list4 = new com.team6.leangoo.model.List();
         list1.setListName("目标");
         list2.setListName("待办事项");
         list3.setListName("进行中");
@@ -67,10 +70,10 @@ public class BoardService {
         listMapper.insertSelective(list2);
         listMapper.insertSelective(list3);
         listMapper.insertSelective(list4);
-        BoardList boardList1=new BoardList();
-        BoardList boardList2=new BoardList();
-        BoardList boardList3=new BoardList();
-        BoardList boardList4=new BoardList();
+        BoardList boardList1 = new BoardList();
+        BoardList boardList2 = new BoardList();
+        BoardList boardList3 = new BoardList();
+        BoardList boardList4 = new BoardList();
         boardList1.setBoardId(boardId);
         boardList1.setListId(list1.getListId());
         boardList2.setBoardId(boardId);
@@ -87,11 +90,40 @@ public class BoardService {
         projectBoardMapper.insert(projectBoard);
         return boardId;
     }
-    public Board getBoardById(Board board){
+
+    public Board getBoardById(Board board) {
         return boardMapper.selectByPrimaryKey(board);
     }
-    public Integer updateBoard(Board board){
+
+    public Integer updateBoard(Board board) {
         return boardMapper.updateByPrimaryKeySelective(board);
+    }
+
+    public Integer archiveBoard(Board board) {
+        board.setBoardIsArchive(1);
+        return boardMapper.updateByPrimaryKeySelective(board);
+    }
+    public Integer reArchiveBoard(Board board){
+        board.setBoardIsArchive(0);
+        return boardMapper.updateByPrimaryKeySelective(board);
+    }
+    public Integer delBoard(Board board) {
+        if(board!=null&&board.getBoardId()!=null) {
+            ProjectBoard projectBoard = new ProjectBoard();
+            BoardList boardList = new BoardList();
+            projectBoard.setBoardId(board.getBoardId());
+            projectBoardMapper.delete(projectBoard);
+            boardList.setBoardId(board.getBoardId());
+            List<BoardList> lists = boardListMapper.select(boardList);
+            com.team6.leangoo.model.List temp = new com.team6.leangoo.model.List();
+            lists.forEach(bl ->
+            {
+                temp.setListId(bl.getListId());
+                listService.delList(temp, board);
+                temp.setListId(null);
+            });
+            return boardMapper.deleteByPrimaryKey(board);
+        }else return -1;
     }
 
 }

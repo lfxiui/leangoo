@@ -15,16 +15,16 @@ import java.util.Map;
  * Created by AgZou on 2017/8/25.
  * 测试shiro框架用 不含业务逻辑
  */
-@Controller
+//@Controller
 public class HomeController {
 
-    @RequestMapping("/index")
+    @RequestMapping("/")
     public String index(){
         return "index";
 
     }
 
-    @RequestMapping(value = "/login")
+   // @RequestMapping(value = "/login")
     public ModelAndView login(HttpServletRequest request) throws Exception{
         System.out.println(request.getAttribute("username"));
         ModelAndView mv=new ModelAndView();

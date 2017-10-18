@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.Id;
+
 /**
  * Created by AgZou on 2017/9/5.
  */
@@ -14,10 +16,10 @@ import org.springframework.transaction.annotation.Transactional;
 public class LoginService {
     @Autowired private UserMapper userMapper;
 
-    public User getUserInfo(String UserAccount){
+    public User getUserInfo(Integer userId){
         User user=new User();
-        user.setUserAccount(UserAccount);
-        return userMapper.selectOne(user);
+        user.setUserId(userId);
+        return userMapper.selectByPrimaryKey(user);
 
     }
 }

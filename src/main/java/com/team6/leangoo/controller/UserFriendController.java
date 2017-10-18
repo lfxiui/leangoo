@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -31,8 +32,8 @@ public class UserFriendController {
     }
 
     @RequestMapping(value = "/getFriendList",method = RequestMethod.POST)
-    public AjaxResult getFriendList(){
-        Integer userId = 1;
+    public AjaxResult getFriendList(HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
         AjaxResult ajaxResult = new AjaxResult();
         try {
             User user = new User();
@@ -51,8 +52,8 @@ public class UserFriendController {
     }
 
     @RequestMapping(value = "/addFriend",method = RequestMethod.POST)
-    public AjaxResult addFriend(@RequestBody Map map){
-        Integer userId = 1;
+    public AjaxResult addFriend(@RequestBody Map map,HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
         User user = new User();
         user.setUserId(userId);
         AjaxResult ajaxResult = new AjaxResult();
@@ -83,8 +84,8 @@ public class UserFriendController {
     }
 
     @RequestMapping(value = "/deleteFriend",method = RequestMethod.POST)
-    public AjaxResult deleteFriend(@RequestBody Map map){
-        Integer userId = 1;
+    public AjaxResult deleteFriend(@RequestBody Map map,HttpSession session){
+        Integer userId = (Integer) session.getAttribute("userId");
         User user = new User();
         user.setUserId(userId);
         AjaxResult ajaxResult = new AjaxResult();

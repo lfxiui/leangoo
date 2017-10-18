@@ -37,7 +37,7 @@ public class TestServiceTest {
 
     @Test
     public void insert() throws Exception {
-        loginService.getUserInfo("agzou");
+
 
        }
     }

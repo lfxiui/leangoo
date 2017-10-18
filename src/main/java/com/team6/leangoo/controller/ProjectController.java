@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpSession;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,8 +34,8 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/getArchiveProject", method = RequestMethod.POST)
-    public AjaxResult getArchiveProject() {
-        Integer userId = 1;
+    public AjaxResult getArchiveProject(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
         User user = new User();
         user.setUserId(userId);
         AjaxResult ajaxResult = new AjaxResult();
@@ -70,8 +71,8 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/getUserProjectList", method = RequestMethod.POST)
-    public AjaxResult getUserProjectList() {
-        Integer userId = 1;
+    public AjaxResult getUserProjectList(HttpSession session) {
+        Integer userId = (Integer) session.getAttribute("userId");
         User user = new User();
         user.setUserId(userId);
         AjaxResult ajaxResult = new AjaxResult();
@@ -87,11 +88,11 @@ public class ProjectController {
     }
 
     @RequestMapping(value = "/newProject", method = RequestMethod.POST)
-    public AjaxResult newProject(@RequestBody Project project) {
+    public AjaxResult newProject(@RequestBody Project project,HttpSession session) {
         project.setProjectIsArchive(0);
         project.setProjectCreateDate(DateUtil.LocalDateToDate(LocalDate.now()));
         project.setProjectEndDate(DateUtil.LocalDateToDate(LocalDate.now().plusDays(7)));
-        Integer userId = 1;
+        Integer userId = (Integer) session.getAttribute("userId");
         return new AjaxResult(projectService.newProject(userId,project));
     }
 
@@ -138,6 +139,7 @@ public class ProjectController {
             user.setUserAccount(map.get("leaguer").toString());
             Project project = new Project();
             project.setProjectId(Integer.valueOf(map.get("projectId").toString()));
+            project.setProjectIsArchive(0);
             if (projectService.addProjectLeaguer(project, user) == 1) {
                 ajaxResult.seterrcode(0);
             } else {
@@ -213,9 +215,20 @@ public class ProjectController {
         }
     }
     @RequestMapping(value = "/getUserPersonalProjectId",method = RequestMethod.POST)
-    public AjaxResult getUserPersonalProjectId(){
-        Integer userId=1;
+    public AjaxResult getUserPersonalProjectId(HttpSession session){
+        Integer userId= (Integer) session.getAttribute("userId");
         return new AjaxResult(projectService.getUserPersonalProjectId(userId));
     }
-
+    @RequestMapping(value = "/delProject")
+    public AjaxResult delProject(@RequestBody Project project){
+        return new AjaxResult(projectService.delProject(project));
+    }
+    @RequestMapping(value = "/reArchiveProject",method = RequestMethod.POST)
+    public AjaxResult reArchiveProject(@RequestBody Project project){
+        return new AjaxResult(projectService.reArchiveProject(project));
+    }
+    @RequestMapping(value = "/getProjectChart",method = RequestMethod.POST)
+    public AjaxResult getProjectChart(@RequestBody Project project){
+        return new AjaxResult(projectService.getProjectChart(project));
+    }
 }

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
  * Created by AgZou on 2017/8/25.
  * 测试shiro框架用,不含业务逻辑
  */
-@Controller
-@RequestMapping("/userInfo")
+//@Controller
+//@RequestMapping("/userInfo")
 public class TestUserController {
     /**
      * 用户查询

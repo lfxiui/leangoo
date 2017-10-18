@@ -1,13 +1,7 @@
 package com.team6.leangoo.service;
 
-import com.team6.leangoo.mapper.BoardMapper;
-import com.team6.leangoo.mapper.CardMapper;
-import com.team6.leangoo.mapper.ListCardMapper;
-import com.team6.leangoo.mapper.ListMapper;
-import com.team6.leangoo.model.Board;
-import com.team6.leangoo.model.Card;
-import com.team6.leangoo.model.List;
-import com.team6.leangoo.model.ListCard;
+import com.team6.leangoo.mapper.*;
+import com.team6.leangoo.model.*;
 import com.team6.leangoo.util.CheckId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +20,8 @@ public class CardService {
     private CardMapper cardMapper;
     @Autowired
     private ListMapper listMapper;
+    @Autowired
+    private CardUserMapper cardUserMapper;
 
     public Board getCardList(Integer boardId) {
         return boardMapper.getList(boardId);
@@ -56,5 +52,12 @@ public class CardService {
             );
         }
         return 1;
+    }
+    public Integer addCardUser(CardUser cardUser){
+        cardUserMapper.insert(cardUser);
+        return cardUser.getId();
+    }
+    public Integer removeCardUser(CardUser cardUser){
+        return cardUserMapper.delete(cardUser);
     }
 }
